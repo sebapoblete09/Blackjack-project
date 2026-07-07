@@ -1,13 +1,13 @@
 extends Control
-
+const CardScene = preload("res://scenes/card.tscn")
 # =========================
 # NODES
 # =========================
 
 @onready var deck = $Deck
 
-@onready var player_cards_label = $PlayerArea/PlayerCardsLabel
-@onready var dealer_cards_label = $DealerArea/DealerCardsLabel
+@onready var player_cards_container = $PlayerArea/PlayerCardsContainer
+@onready var dealer_cards_container = $DealerArea/DealerCardsContainer
 
 @onready var player_score_label = $PlayerArea/PlayerScoreLabel
 @onready var dealer_score_label = $DealerArea/DealerScoreLabel
@@ -97,6 +97,23 @@ func determine_winner():
 	game_over = true
 	set_game_buttons(false)
 
+func clear_cards(container):
+	for child in container.get_children():
+		child.queue_free()
+
+func draw_hand(hand, container, hide_second := false):
+
+	clear_cards(container)
+	
+	for i in range(hand.size()):
+		
+		var card = CardScene.instantiate()
+		container.add_child(card)
+		if hide_second and i ==1:
+			card.show_back()
+		else:
+			card.set_card(hand[i])
+		
 # =========================
 # PLAYER ACTIONS
 # =========================
@@ -159,13 +176,9 @@ func is_bust(hand):
 
 func update_ui():
 
-	player_cards_label.text = hand_to_string(player_hand)
-
-	dealer_cards_label.text = hand_to_string(
-		dealer_hand,
-		not reveal_dealer_cards
-	)
-
+	draw_hand(player_hand, player_cards_container)
+	draw_hand(dealer_hand, dealer_cards_container,not reveal_dealer_cards)
+	
 	player_score_label.text = "Score: " + str(calculate_hand_value(player_hand))
 
 	if reveal_dealer_cards:
