@@ -57,3 +57,8 @@ git clone https://github.com/TU_USUARIO/fantasy-blackjack.git
 
 2. Abrir el proyecto con Godot 4.
 3. Ejecutar la escena principal.
+
+ ## Capturas
+
+ ###Version jugable actual v0.2.0
+![Gameplay](docs/images/gameplay_v0.2.0.png)
