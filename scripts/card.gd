@@ -7,6 +7,7 @@ extends Control
 
 const CARD_WIDTH = 32
 const CARD_HEIGHT = 48
+const CARD_SCALE =  2.0
 
 const CARD_TEXTURE = preload("res://assets/cards/spritesheet.png")
 
@@ -25,6 +26,8 @@ func set_region(x: int, y: int):
 	)
 
 	texture_rect.texture = atlas
+	texture_rect.scale = Vector2(2, 2)
+	
 
 
 func set_card(card_data):
@@ -58,3 +61,10 @@ func show_back():
 	)
 
 	texture_rect.texture = atlas
+	texture_rect.scale = Vector2(2, 2)
+
+func _ready():
+	custom_minimum_size = Vector2(
+		CARD_WIDTH * CARD_SCALE,
+		CARD_HEIGHT* CARD_SCALE
+	)

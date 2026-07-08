@@ -27,11 +27,23 @@ Estado: Completado
 
 ---
 
-# Epic 2 — Presentación
+## Epic 2 — Sistema visual
 
-## Objetivo
+### Sprint 2.1 ✅ COMPLETADO
 
-Transformar el prototipo en un juego visualmente agradable sin modificar las mecánicas principales.
+- [x] Crear Card.tscn
+- [x] Implementar spritesheet
+- [x] Mostrar cartas mediante sprites
+- [x] Ocultar segunda carta del dealer
+- [x] Reparto secuencial
+- [x] Mejoras visuales de la interfaz
+
+### Sprint 2.2  EN DESARROLLO
+
+- [ ] Animaciones de cartas
+- [ ] Sonidos
+- [ ] Feedback visual
+- [ ] Pulido de UI
 
 ## Entregables
 

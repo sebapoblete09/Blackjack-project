@@ -258,3 +258,33 @@ La documentación del proyecto se mantendrá en español.
 El código se desarrollará completamente en inglés.
 
 Fecha: 30/06/2026
+
+---
+
+## DT-003
+
+Cada carta del juego se representa mediante una escena independiente (`Card.tscn`).
+
+La responsabilidad de mostrar una carta (frente o reverso) pertenece exclusivamente a `Card.gd`, evitando que `GameManager` conozca detalles del spritesheet.
+
+Fecha: 08/07/2026
+
+---
+
+## DT-004
+
+La representación visual de las cartas se realiza mediante un único spritesheet utilizando `AtlasTexture`.
+
+Esta decisión reduce la cantidad de recursos cargados y facilita el reemplazo futuro del diseño de las cartas sin modificar la lógica del juego.
+
+Fecha: 08/07/2026
+
+---
+
+## DT-005
+
+La lógica del juego y la interfaz gráfica permanecen desacopladas.
+
+`GameManager` controla el estado de la partida, mientras que `Card.gd` es responsable únicamente de la representación visual de cada carta.
+
+Fecha: 08/07/2026

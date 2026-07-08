@@ -6,15 +6,13 @@ El objetivo inicial fue implementar una versión funcional del Blackjack clásic
 
 ## Características actuales
 
-- Implementación de las reglas básicas del Blackjack.
-- Mazo de 52 cartas con mezcla aleatoria.
-- Cálculo automático del valor de cada mano.
-- Manejo del valor variable de los ases (1 u 11).
-- Lógica del dealer siguiendo las reglas tradicionales.
-- Carta oculta del dealer hasta el final de la ronda.
-- Detección de victoria, derrota y empate.
-- Reinicio de la partida.
-- Interfaz desarrollada con los nodos `Control` de Godot.
+- Juego completo de Blackjack contra un dealer.
+- Sistema de cartas mediante sprites.
+- Dealer con segunda carta oculta.
+- reparto secuencial de cartas.
+- Cáculo automático del valor de la mano (incluyendo As).
+- Reinicio de partidas.
+- Interfaz grafica basica basada en mesa de juego medieval
 
 ## Tecnologías utilizadas
 
@@ -41,12 +39,12 @@ El proyecto está organizado separando la lógica del mazo de la lógica princip
 
 ## Próximas mejoras
 
-- Mejorar la interfaz gráfica.
-- Incorporar sprites para las cartas.
-- Añadir animaciones al repartir y revelar cartas.
-- Implementar efectos de sonido.
-- Crear una ambientación de fantasía medieval.
-- Agregar modificadores de reglas mediante cartas y reliquias.
+- Añadir animaciones para el movimiento y revelado de las cartas.
+- Incorporar efectos de sonido y música ambiental.
+- Mejorar el feedback visual de botones y resultados.
+- Implementar un sistema de apuestas y fichas.
+- Añadir estadísticas de partidas (victorias, derrotas y rachas).
+- Diseñar eventos, reliquias y modificadores de reglas.
 - Evolucionar el proyecto hacia un juego de progresión tipo roguelite.
 
 ## Cómo ejecutar el proyecto
