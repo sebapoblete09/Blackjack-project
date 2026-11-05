@@ -176,36 +176,51 @@ func animate_card(
 	card_data: Dictionary,
 	face_down := false
 ):
-	var card = CardScene.instantiate()
-	
-	animated_cards.add_child(card)
-	
-	if face_down:
-		card.show_back()
-	else:
-		card.set_card(card_data)
-	card.global_position= deck_visual.global_position
-	
-	var tween = create_tween()
-	
-	tween.tween_property(
-		card,
-		"global_position",
-		container.global_position,
-		0.5
-	)
-	await tween.finished
-	
-	card.queue_free()
-
+	# 1. Crear la carta definitiva
 	var final_card = CardScene.instantiate()
-
-	container.add_child(final_card)	
+	container.add_child(final_card)
 
 	if face_down:
 		final_card.show_back()
 	else:
 		final_card.set_card(card_data)
+
+	# 2. Ocultarla sin quitar su espacio del HBoxContainer
+	final_card.modulate.a = 0.0
+
+	# 3. Esperar a que Godot actualice el layout
+	await get_tree().process_frame
+
+	# 4. Obtener la posición definitiva
+	var target_position = final_card.global_position
+
+	# 5. Crear la carta que se animará
+	var card = CardScene.instantiate()
+	animated_cards.add_child(card)
+
+	if face_down:
+		card.show_back()
+	else:
+		card.set_card(card_data)
+
+	# 6. Colocarla en el mazo
+	card.global_position = deck_visual.global_position
+
+	# 7. Animarla hacia su posición real
+	var tween = create_tween()
+
+	tween.tween_property(
+		card,
+		"global_position",
+		target_position,
+		0.5
+	)
+
+	await tween.finished
+
+	# 8. Mostrar la carta definitiva y eliminar la temporal
+	final_card.modulate.a = 1.0
+	card.queue_free()
 
 
 func set_game_buttons(enabled: bool):
