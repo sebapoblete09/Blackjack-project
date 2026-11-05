@@ -17,6 +17,9 @@ const CardScene = preload("res://scenes/card.tscn")
 @onready var hit_button = $UI/HitButton
 @onready var stand_button = $UI/StandButton
 
+@onready var deck_visual = $DeckVisual
+@onready var animated_cards = $AnimateCards
+
 # =========================
 # GAME STATE
 # =========================
@@ -34,19 +37,22 @@ var game_over = false
 func _ready():
 	start_game()
 
+
 # =========================
 # GAME FLOW
 # =========================
 
 func start_game()->void:
-
+	
 	game_over = false
 	reveal_dealer_cards = false
 
 	player_hand.clear()
 	dealer_hand.clear()
-
 	result_label.text = ""
+	clear_table()
+
+	
 
 	set_game_buttons(true)
 
@@ -60,13 +66,11 @@ func start_game()->void:
 func dealer_turn():
 
 	reveal_dealer_cards = true
-	update_ui()
+	update_scores()
 	await get_tree().create_timer(1.3).timeout
 	while calculate_hand_value(dealer_hand) < 17:
-		dealer_hand.append(deck.draw_card())
-		update_ui()
 		await get_tree().create_timer(1).timeout
-
+		await deal_to_dealer()
 	determine_winner()
 
 
@@ -93,23 +97,7 @@ func determine_winner():
 	game_over = true
 	set_game_buttons(false)
 
-func clear_cards(container):
-	for child in container.get_children():
-		child.queue_free()
 
-func draw_hand(hand, container, hide_second := false):
-
-	clear_cards(container)
-	
-	for i in range(hand.size()):
-		
-		var card = CardScene.instantiate()
-		container.add_child(card)
-		if hide_second and i ==1:
-			card.show_back()
-		else:
-			card.set_card(hand[i])
-		
 # =========================
 # PLAYER ACTIONS
 # =========================
@@ -118,10 +106,8 @@ func _on_hit_button_pressed():
 
 	if game_over:
 		return
-
-	player_hand.append(deck.draw_card())
-
-	update_ui()
+		
+	await deal_to_player()
 
 	if is_bust(player_hand):
 		determine_winner()
@@ -136,7 +122,6 @@ func _on_stand_button_pressed():
 
 
 func _on_restart_button_pressed():
-
 	start_game()
 
 # =========================
@@ -170,11 +155,8 @@ func is_bust(hand):
 # UI
 # =========================
 
-func update_ui():
 
-	draw_hand(player_hand, player_cards_container)
-	draw_hand(dealer_hand, dealer_cards_container,not reveal_dealer_cards)
-	
+func update_scores():
 	if player_hand.is_empty():
 		player_score_label.text = "Score: 0"
 	else:
@@ -189,20 +171,41 @@ func update_ui():
 	else:
 		dealer_score_label.text = "Score: " + str(dealer_hand[0]["value"])
 
+func animate_card(
+	container: HBoxContainer,
+	card_data: Dictionary,
+	face_down := false
+):
+	var card = CardScene.instantiate()
+	
+	animated_cards.add_child(card)
+	
+	if face_down:
+		card.show_back()
+	else:
+		card.set_card(card_data)
+	card.global_position= deck_visual.global_position
+	
+	var tween = create_tween()
+	
+	tween.tween_property(
+		card,
+		"global_position",
+		container.global_position,
+		0.5
+	)
+	await tween.finished
+	
+	card.queue_free()
 
-func hand_to_string(hand, hide_second_card := false):
+	var final_card = CardScene.instantiate()
 
-	var result = ""
+	container.add_child(final_card)	
 
-	for i in range(hand.size()):
-
-		if hide_second_card and i == 1:
-			result += "[Hidden]   "
-		else:
-			var card = hand[i]
-			result += card["rank"] + card["suit"] + "   "
-
-	return result
+	if face_down:
+		final_card.show_back()
+	else:
+		final_card.set_card(card_data)
 
 
 func set_game_buttons(enabled: bool):
@@ -215,18 +218,45 @@ func deal_initial_cards() -> void:
 
 	await get_tree().create_timer(0.5).timeout
 	
-	player_hand.append(deck.draw_card())
-	update_ui()
+	await deal_to_player()
 	await get_tree().create_timer(0.3).timeout
 
-	dealer_hand.append(deck.draw_card())
-	update_ui()
+	await deal_to_dealer()	
 	await get_tree().create_timer(0.3).timeout	
 	
-	player_hand.append(deck.draw_card())
-	update_ui()
+	await deal_to_player()
 	await get_tree().create_timer(0.3).timeout
 
-	dealer_hand.append(deck.draw_card())
-	update_ui()
+	await deal_to_dealer(true)
 	await get_tree().create_timer(0.5).timeout	
+
+func deal_to_player():
+	var card = deck.draw_card()
+	player_hand.append(card)
+	await animate_card(
+		player_cards_container,
+		card
+	)
+	update_scores()
+	
+func deal_to_dealer(face_down:=false):
+	var card = deck.draw_card()
+	dealer_hand.append(card)
+	await animate_card(
+		dealer_cards_container,
+		card,
+		face_down
+		)
+	update_scores()
+	
+func clear_table():
+
+	for child in player_cards_container.get_children():
+		child.queue_free()
+
+	for child in dealer_cards_container.get_children():
+		child.queue_free()
+
+	for child in animated_cards.get_children():
+		child.queue_free()
+	
