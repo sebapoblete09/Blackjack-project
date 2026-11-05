@@ -8,6 +8,7 @@
 
 [node name="Main" type="Control" unique_id=573453592]
 layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_right = -1112.0
@@ -20,6 +21,30 @@ script = ExtResource("1_0wfyh")
 position = Vector2(635.99066, 366.8746)
 scale = Vector2(0.45614174, 0.48025143)
 texture = ExtResource("2_jyhfs")
+
+[node name="Deck" type="Node" parent="." unique_id=1815720450]
+script = ExtResource("2_sugp2")
+
+[node name="DeckVisual" type="Control" parent="." unique_id=753716044]
+layout_mode = 1
+anchor_left = 5.3970003
+anchor_top = 1.769
+anchor_right = 5.952
+anchor_bottom = 2.8590002
+offset_left = 11.294678
+offset_top = 16.06987
+offset_right = 11.201538
+offset_bottom = 16.125916
+
+[node name="TextureRect" type="TextureRect" parent="DeckVisual" unique_id=1005453994]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="AnimateCards" type="Control" parent="." unique_id=547549350]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="DealerArea" type="VBoxContainer" parent="." unique_id=903819739]
 layout_mode = 1
@@ -67,12 +92,14 @@ uppercase = true
 [node name="PlayerArea" type="VBoxContainer" parent="." unique_id=736086819]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 7.7970004
-anchor_bottom = 6.6280003
-offset_left = 10.284302
-offset_top = 524.5364
-offset_right = -46.649902
-offset_bottom = 95.04639
+anchor_left = 1.797
+anchor_top = 4.037
+anchor_right = 5.6780005
+anchor_bottom = 6.104
+offset_left = -0.04650879
+offset_top = 0.034454346
+offset_right = 6.6661377
+offset_bottom = -0.026306152
 
 [node name="PlayerCardsContainer" type="HBoxContainer" parent="PlayerArea" unique_id=1350708797]
 layout_mode = 2
@@ -117,9 +144,6 @@ text = "Stand"
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "Restart"
-
-[node name="Deck" type="Node" parent="." unique_id=1815720450]
-script = ExtResource("2_sugp2")
 
 [connection signal="pressed" from="UI/HitButton" to="." method="_on_hit_button_pressed"]
 [connection signal="pressed" from="UI/StandButton" to="." method="_on_stand_button_pressed"]

@@ -39,7 +39,6 @@ El proyecto está organizado separando la lógica del mazo de la lógica princip
 
 ## Próximas mejoras
 
-- Añadir animaciones para el movimiento y revelado de las cartas.
 - Incorporar efectos de sonido y música ambiental.
 - Mejorar el feedback visual de botones y resultados.
 - Implementar un sistema de apuestas y fichas.
@@ -58,7 +57,7 @@ git clone https://github.com/TU_USUARIO/fantasy-blackjack.git
 2. Abrir el proyecto con Godot 4.
 3. Ejecutar la escena principal.
 
- ## Capturas
+## Capturas
 
- ###Version jugable actual v0.2.0
+### Estado actual (v0.2.0)
 ![Gameplay](docs/images/gameplay_v0.2.0.png)
