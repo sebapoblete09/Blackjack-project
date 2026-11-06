@@ -39,7 +39,6 @@ El proyecto está organizado separando la lógica del mazo de la lógica princip
 
 ## Próximas mejoras
 
-- Añadir animaciones para el movimiento y revelado de las cartas.
 - Incorporar efectos de sonido y música ambiental.
 - Mejorar el feedback visual de botones y resultados.
 - Implementar un sistema de apuestas y fichas.
