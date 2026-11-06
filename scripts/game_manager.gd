@@ -16,6 +16,7 @@ const CardScene = preload("res://scenes/card.tscn")
 
 @onready var hit_button = $UI/HitButton
 @onready var stand_button = $UI/StandButton
+@onready var restart_button = $UI/RestartButton
 
 @onready var deck_visual = $DeckVisual
 @onready var animated_cards = $AnimateCards
@@ -50,28 +51,40 @@ func start_game()->void:
 	player_hand.clear()
 	dealer_hand.clear()
 	result_label.text = ""
+	player_score_label.text = ""
+	dealer_score_label.text = ""
 	clear_table()
 
 	
-
-	set_game_buttons(true)
+	#bloquear botones al comenzar el juego
+	set_game_buttons(false)
 
 	deck.create_deck()
 	deck.shuffle_deck()
 
 	await deal_initial_cards()
 
+	# Habilitar botones luego de la repartida inicial
+	set_game_buttons(true)
+
+
 
 
 func dealer_turn():
 
-	reveal_dealer_cards = true
-	update_scores()
+	# Revelar la carta oculta
 	await get_tree().create_timer(1.3).timeout
+	reveal_dealer_card()
+
+	await get_tree().create_timer(1.3).timeout
+
+	# La banca debe pedir mientras tenga menos de 17
 	while calculate_hand_value(dealer_hand) < 17:
 		await get_tree().create_timer(1).timeout
 		await deal_to_dealer()
+
 	determine_winner()
+
 
 
 func determine_winner():
@@ -95,8 +108,7 @@ func determine_winner():
 		result_label.text = "Draw"
 
 	game_over = true
-	set_game_buttons(false)
-
+	restart_button.disabled = false
 
 # =========================
 # PLAYER ACTIONS
@@ -104,19 +116,25 @@ func determine_winner():
 
 func _on_hit_button_pressed():
 
-	if game_over:
+	if game_over or hit_button.disabled:
 		return
+	
+	set_game_buttons(false)
 		
 	await deal_to_player()
 
 	if is_bust(player_hand):
 		determine_winner()
+	else:
+		set_game_buttons(true)
 
 
 func _on_stand_button_pressed():
 
-	if game_over:
+	if game_over or stand_button.disabled:
 		return
+	
+	set_game_buttons(false)
 
 	dealer_turn()
 
@@ -170,6 +188,23 @@ func update_scores():
 
 	else:
 		dealer_score_label.text = "Score: " + str(dealer_hand[0]["value"])
+
+
+func reveal_dealer_card():
+	# Verificar que la banca tenga al menos dos cartas
+	if dealer_hand.size() < 2:
+		return
+
+	# Obtener la segunda carta visual de la banca
+	var hidden_card = dealer_cards_container.get_child(1)
+
+	# Mostrar su cara utilizando los datos reales
+	hidden_card.set_card(dealer_hand[1])
+
+	# Actualizar el estado y la puntuación
+	reveal_dealer_cards = true
+	update_scores()
+
 
 func animate_card(
 	container: HBoxContainer,
@@ -227,6 +262,7 @@ func set_game_buttons(enabled: bool):
 
 	hit_button.disabled = not enabled
 	stand_button.disabled = not enabled
+	restart_button.disabled = not enabled
 
 #Agregar un pequeño delay entre cada carta incial entregada	
 func deal_initial_cards() -> void:
