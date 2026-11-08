@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://7v0nmuk3sfra" path="res://scripts/game_manager.gd" id="1_0wfyh"]
 [ext_resource type="Texture2D" uid="uid://c6s8t30sun2im" path="res://assets/backgorunds/Bacckground.png" id="2_jyhfs"]
 [ext_resource type="Script" uid="uid://ddwxhfnmkb87y" path="res://scripts/deck.gd" id="2_sugp2"]
+[ext_resource type="AudioStream" uid="uid://btlxvbw6emlnj" path="res://assets/audio/card_sound.wav" id="4_jyhfs"]
+[ext_resource type="AudioStream" uid="uid://k5wwmfr4hd8u" path="res://assets/audio/button_sound.wav" id="5_tbgi4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o6xl0"]
 bg_color = Color(0.1882353, 0.14509805, 0.11372549, 1)
@@ -250,6 +252,15 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_tbgi4")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_tefeu")
 text = "Restart"
 
+[node name="CardSound" type="AudioStreamPlayer" parent="." unique_id=2061153834]
+stream = ExtResource("4_jyhfs")
+
+[node name="ButtonSound" type="AudioStreamPlayer" parent="." unique_id=576620141]
+stream = ExtResource("5_tbgi4")
+
 [connection signal="pressed" from="UI/HitButton" to="." method="_on_hit_button_pressed"]
+[connection signal="pressed" from="UI/HitButton" to="." method="_on_hit_button_sound_pressed"]
 [connection signal="pressed" from="UI/StandButton" to="." method="_on_stand_button_pressed"]
+[connection signal="pressed" from="UI/StandButton" to="." method="_on_stand_button_sound_pressed"]
 [connection signal="pressed" from="UI/RestartButton" to="." method="_on_restart_button_pressed"]
+[connection signal="pressed" from="UI/RestartButton" to="." method="_on_restart_button_sound_pressed"]
