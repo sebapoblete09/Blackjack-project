@@ -12,7 +12,8 @@ const CardScene = preload("res://scenes/card.tscn")
 @onready var player_score_label = $PlayerArea/PlayerScoreLabel
 @onready var dealer_score_label = $DealerArea/DealerScoreLabel
 
-@onready var result_label = $CenterArea/ResultLabel
+@onready var result_label = $CenterArea/ResultPanel/ResultLabel
+@onready var result_panel = $CenterArea/ResultPanel
 
 @onready var hit_button = $UI/HitButton
 @onready var stand_button = $UI/StandButton
@@ -47,6 +48,9 @@ func start_game()->void:
 	
 	game_over = false
 	reveal_dealer_cards = false
+	result_panel.hide()
+	result_panel.modulate.a = 1.0
+	result_panel.scale = Vector2.ONE
 
 	player_hand.clear()
 	dealer_hand.clear()
@@ -94,18 +98,26 @@ func determine_winner():
 
 	if player_total > 21:
 		result_label.text = "Dealer Wins"
-
+		result_label.add_theme_color_override("font_color",Color("841622ff"))
+		animate_result()
 	elif dealer_total > 21:
 		result_label.text = "Player Wins"
-
+		result_label.add_theme_color_override("font_color",Color("#EBC46A"))
+		animate_result()
 	elif player_total > dealer_total:
 		result_label.text = "Player Wins"
+		result_label.add_theme_color_override("font_color",Color("#EBC46A"))
+		animate_result()
 
 	elif dealer_total > player_total:
 		result_label.text = "Dealer Wins"
+		result_label.add_theme_color_override("font_color",Color("841622ff"))
+		animate_result()
 
 	else:
 		result_label.text = "Draw"
+		result_label.add_theme_color_override("font_color",Color("#C8D0D7"))
+		animate_result()
 
 	game_over = true
 	restart_button.disabled = false
@@ -311,3 +323,31 @@ func clear_table():
 	for child in animated_cards.get_children():
 		child.queue_free()
 	
+
+#animar mensaje de victoria/derrota
+
+func animate_result():
+	result_panel.show()
+
+	result_panel.modulate.a = 0.0
+	result_panel.scale = Vector2(0.85, 0.85)
+
+	# Escalar desde el centro del panel
+	result_panel.pivot_offset = result_panel.size / 2.0
+
+	var tween = create_tween()
+	tween.set_parallel(true)
+
+	tween.tween_property(
+		result_panel,
+		"modulate:a",
+		1.0,
+		0.35
+	)
+
+	tween.tween_property(
+		result_panel,
+		"scale",
+		Vector2.ONE,
+		0.35
+	).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)

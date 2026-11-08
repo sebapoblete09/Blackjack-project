@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.2.0] - 2026-07-08
+## [0.2.0] - 2026-06-11
 
 ### Added
 
@@ -21,3 +21,4 @@
 - Corrección del cálculo de palos en el spritesheet.
 - Ajuste del reverso de la carta.
 - Corrección del tamaño y distribución de las cartas.
+- correccion animacion de reparto de cartas
