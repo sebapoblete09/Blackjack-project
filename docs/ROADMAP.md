@@ -40,7 +40,7 @@ Estado: Completado
 
 ### Sprint 2.2  EN DESARROLLO
 
-- [ ] Animaciones de cartas
+- [X] Animaciones de cartas
 - [ ] Sonidos
 - [ ] Feedback visual
 - [ ] Pulido de UI
