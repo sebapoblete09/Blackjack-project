@@ -22,6 +22,9 @@ const CardScene = preload("res://scenes/card.tscn")
 @onready var deck_visual = $DeckVisual
 @onready var animated_cards = $AnimateCards
 
+@onready var card_sound = $CardSound
+@onready var button_sound = $ButtonSound
+
 # =========================
 # GAME STATE
 # =========================
@@ -69,7 +72,8 @@ func start_game()->void:
 	await deal_initial_cards()
 
 	# Habilitar botones luego de la repartida inicial
-	set_game_buttons(true)
+	if not game_over:
+		set_game_buttons(true)
 
 
 
@@ -95,8 +99,21 @@ func determine_winner():
 
 	var player_total = calculate_hand_value(player_hand)
 	var dealer_total = calculate_hand_value(dealer_hand)
+	var player_blackjack = is_blackjack(player_hand)
+	var dealer_blackjack = is_blackjack(dealer_hand)
 
-	if player_total > 21:
+	if player_blackjack and dealer_blackjack:
+		result_label = "Draw"
+		result_label.add_theme_color_override("font_color",Color("#C8D0D7"))
+
+	elif player_blackjack:
+		result_label.text = "Player BlackJack!"
+		result_label.add_theme_color_override("font_color",Color("#EBC46A"))
+		animate_result()
+	elif dealer_blackjack:
+		result_label.text = "Dealer Blackjack!"
+		result_label.add_theme_color_override("font_color", Color("#E77979"))
+	elif player_total > 21:
 		result_label.text = "Dealer Wins"
 		result_label.add_theme_color_override("font_color",Color("841622ff"))
 		animate_result()
@@ -137,8 +154,17 @@ func _on_hit_button_pressed():
 
 	if is_bust(player_hand):
 		determine_winner()
+	elif calculate_hand_value(player_hand) == 21 :
+		await dealer_turn()
 	else:
 		set_game_buttons(true)
+
+func _on_hit_button_sound_pressed():
+	button_sound.play()
+func _on_stand_button_sound_pressed():
+	button_sound.play()	
+func _on_restart_button_sound_pressed():
+	button_sound.play()			
 
 
 func _on_stand_button_pressed():
@@ -180,6 +206,9 @@ func calculate_hand_value(hand):
 func is_bust(hand):
 
 	return calculate_hand_value(hand) > 21
+
+func is_blackjack(hand:Array) -> bool:
+	return hand.size() == 2 and calculate_hand_value(hand) == 21
 
 # =========================
 # UI
@@ -265,6 +294,8 @@ func animate_card(
 
 	await tween.finished
 
+	card_sound.play()
+
 	# 8. Mostrar la carta definitiva y eliminar la temporal
 	final_card.modulate.a = 1.0
 	card.queue_free()
@@ -276,7 +307,6 @@ func set_game_buttons(enabled: bool):
 	stand_button.disabled = not enabled
 	restart_button.disabled = not enabled
 
-#Agregar un pequeño delay entre cada carta incial entregada	
 func deal_initial_cards() -> void:
 
 	await get_tree().create_timer(0.5).timeout
@@ -292,6 +322,10 @@ func deal_initial_cards() -> void:
 
 	await deal_to_dealer(true)
 	await get_tree().create_timer(0.5).timeout	
+
+	if calculate_hand_value(player_hand) == 21:
+		set_game_buttons(false)
+		await dealer_turn()
 
 func deal_to_player():
 	var card = deck.draw_card()
