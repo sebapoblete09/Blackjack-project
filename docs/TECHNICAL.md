@@ -288,3 +288,10 @@ La lógica del juego y la interfaz gráfica permanecen desacopladas.
 `GameManager` controla el estado de la partida, mientras que `Card.gd` es responsable únicamente de la representación visual de cada carta.
 
 Fecha: 08/07/2026
+
+---
+## DT-006
+
+Se plantea la idea de pasar de un blackjack a un 31, juego mas antiguo que da mas oportunidad a añadir mecanicas
+
+Fecha: 18/11/2026
